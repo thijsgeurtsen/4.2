@@ -1,205 +1,185 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <title>Groep 4 – keersommen</title>
+  <meta charset="UTF-8" />
+  <title>Tafels 2, 5 en 10</title>
   <style>
-    body {
+    body{
       font-family: system-ui, sans-serif;
-      background: #f4f4ff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
+      background:#f4f6ff;
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
     }
-    .container {
-      background: white;
-      padding: 2rem 2.5rem;
-      border-radius: 1.5rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      max-width: 520px;
-      width: 95%;
-      text-align: center;
+    .container{
+      background:#fff;
+      padding:2.5rem;
+      border-radius:1.5rem;
+      box-shadow:0 10px 30px rgba(0,0,0,.1);
+      max-width:560px;
+      width:95%;
+      text-align:center;
     }
-    .back { font-size: .85rem; margin-bottom: 1rem; }
-    .back a { color: #4f46e5; text-decoration: none; }
-    h1 { margin: 0 0 .3rem; font-size: 1.8rem; }
-    .subtitle { color: #555; margin: 0 0 1.5rem; font-size: .95rem; }
-
-    .stats {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 1.2rem;
-      font-size: 1rem;
+    .back{font-size:.9rem;text-align:left;margin-bottom:1rem}
+    .back a{color:#4f46e5;text-decoration:none;font-weight:700}
+    h1{margin:0 0 .4rem;font-size:2rem}
+    .subtitle{color:#555;margin:0 0 1.4rem;font-size:.95rem}
+    .stats{display:flex;justify-content:space-between;gap:.8rem;flex-wrap:wrap;margin-bottom:1.2rem;font-weight:800}
+    .question{font-size:3rem;margin:1rem 0;min-height:3rem}
+    input{
+      font-size:1.6rem;
+      padding:.5rem .9rem;
+      width:200px;
+      text-align:center;
+      border-radius:.9rem;
+      border:2px solid #ccc;
+      outline:none;
     }
-    .question {
-      font-size: 2.2rem;
-      margin-bottom: 1rem;
-      min-height: 2.2rem;
+    input:focus{border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.15)}
+    button{
+      margin-top:1rem;
+      padding:.85rem 1.6rem;
+      border:none;
+      border-radius:999px;
+      background:#4f46e5;
+      color:#fff;
+      font-weight:900;
+      cursor:pointer;
+      font-size:1rem;
     }
-    #answer {
-      font-size: 1.6rem;
-      padding: .4rem .8rem;
-      width: 140px;
-      text-align: center;
-      border-radius: .75rem;
-      border: 2px solid #ccc;
-      outline: none;
-    }
-    #answer:focus {
-      border-color: #4f46e5;
-      box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
-    }
-    button.main-btn {
-      margin-top: 1.5rem;
-      padding: .75rem 1.5rem;
-      font-size: 1rem;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      background: #4f46e5;
-      color: white;
-      font-weight: 600;
-    }
-    button.main-btn:disabled { background: #bbb; cursor: default; }
-    .feedback {
-      height: 1.4rem;
-      margin-top: .5rem;
-      font-weight: 600;
-    }
-    .feedback.correct { color: #16a34a; }
-    .feedback.wrong { color: #dc2626; }
-    .result { margin-top: 1.5rem; font-size: 1rem; }
+    button:disabled{background:#bbb;cursor:default}
+    .feedback{height:1.4rem;margin-top:.5rem;font-weight:900}
+    .good{color:#16a34a}
+    .bad{color:#dc2626}
+    .result{margin-top:1rem;font-weight:800}
   </style>
 </head>
+
 <body>
   <div class="container">
-    <div class="back">
-      <a href="groep4.html">← Terug naar groep 4 menu</a>
-    </div>
+    <div class="back"><a href="index.html">← Terug</a></div>
 
-    <h1>Keersommen</h1>
-    <p class="subtitle">Tafels 2, 3, 4, 5 en 10. Je hebt 2 minuten.</p>
+    <h1>Tafels 2, 5 en 10</h1>
+    <p class="subtitle">Maak in 2 minuten zoveel mogelijk sommen. Druk op Enter om te controleren.</p>
 
     <div class="stats">
-      <div>⏱ Tijd: <span id="time">2:00</span></div>
-      <div>✅ Goed: <span id="score">0</span></div>
-      <div>📊 Pogingen: <span id="attempts">0</span></div>
+      <div>⏱ <span id="time">2:00</span></div>
+      <div>✅ <span id="score">0</span></div>
+      <div>📊 <span id="attempts">0</span></div>
     </div>
 
-    <div class="question" id="question">Druk op “Start”.</div>
+    <div class="question" id="question">Druk op start</div>
 
-    <input type="number" id="answer" placeholder="antwoord" disabled autocomplete="off">
+    <input id="answer" type="number" placeholder="antwoord" disabled>
     <div id="feedback" class="feedback"></div>
 
-    <button id="startBtn" class="main-btn">Start 2-minutentest</button>
-
+    <button id="startBtn">Start 2-minutentest</button>
     <div id="result" class="result"></div>
   </div>
 
-  <script>
-    const timeEl = document.getElementById("time");
-    const scoreEl = document.getElementById("score");
-    const attemptsEl = document.getElementById("attempts");
-    const questionEl = document.getElementById("question");
-    const answerInput = document.getElementById("answer");
-    const feedbackEl = document.getElementById("feedback");
-    const startBtn = document.getElementById("startBtn");
-    const resultEl = document.getElementById("result");
+<script>
+  const timeEl = document.getElementById("time");
+  const scoreEl = document.getElementById("score");
+  const attemptsEl = document.getElementById("attempts");
+  const questionEl = document.getElementById("question");
+  const answerEl = document.getElementById("answer");
+  const feedbackEl = document.getElementById("feedback");
+  const startBtn = document.getElementById("startBtn");
+  const resultEl = document.getElementById("result");
 
-    let timeLeft = 120;
-    let timerId = null;
-    let score = 0;
-    let attempts = 0;
-    let currentA = null;
-    let currentB = null;
-    let correctAnswer = null;
-    let gameActive = false;
+  const tables = [2,5,10];
 
-    const allowedTables = [2, 3, 4, 5, 10];
+  let timeLeft = 120;
+  let timer = null;
+  let score = 0;
+  let attempts = 0;
+  let correct = 0;
+  let active = false;
 
-    function formatTime(seconds) {
-      const m = Math.floor(seconds / 60);
-      const s = seconds % 60;
-      return m + ":" + (s < 10 ? "0" + s : s);
-    }
+  function formatTime(s){
+    return Math.floor(s/60) + ":" + String(s%60).padStart(2,"0");
+  }
 
-    function randomInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+  function randInt(min,max){ // incl
+    return Math.floor(Math.random()*(max-min+1))+min;
+  }
 
-    function newQuestion() {
-      currentA = allowedTables[Math.floor(Math.random() * allowedTables.length)];
-      currentB = randomInt(1, 10);
-      correctAnswer = currentA * currentB;
-      questionEl.textContent = `${currentA} × ${currentB} = ?`;
-      answerInput.value = "";
-      answerInput.focus();
-    }
+  function newQuestion(){
+    const a = randInt(1,10);              // 1 t/m 10
+    const b = tables[randInt(0, tables.length-1)];
+    // wissel soms om voor variatie (2×7 vs 7×2)
+    const swap = Math.random() < 0.5;
+    const x = swap ? b : a;
+    const y = swap ? a : b;
 
-    function startTimer() {
-      timeLeft = 120;
+    correct = x * y;
+    questionEl.textContent = `${x} × ${y} = ?`;
+    answerEl.value = "";
+    answerEl.focus();
+  }
+
+  function startGame(){
+    if(active) return;
+    active = true;
+
+    score = 0;
+    attempts = 0;
+    timeLeft = 120;
+
+    scoreEl.textContent = "0";
+    attemptsEl.textContent = "0";
+    feedbackEl.textContent = "";
+    feedbackEl.className = "feedback";
+    resultEl.textContent = "";
+
+    answerEl.disabled = false;
+    startBtn.disabled = true;
+
+    newQuestion();
+    timeEl.textContent = formatTime(timeLeft);
+
+    timer = setInterval(() => {
+      timeLeft--;
       timeEl.textContent = formatTime(timeLeft);
-      timerId = setInterval(() => {
-        timeLeft--;
-        timeEl.textContent = formatTime(timeLeft);
-        if (timeLeft <= 0) endGame();
-      }, 1000);
+      if(timeLeft <= 0) endGame();
+    }, 1000);
+  }
+
+  function endGame(){
+    clearInterval(timer);
+    active = false;
+
+    answerEl.disabled = true;
+    startBtn.disabled = false;
+
+    const pct = Math.round((score/attempts)*100) || 0;
+    resultEl.textContent = `Je had ${score} goed van ${attempts} pogingen. (${pct}%)`;
+  }
+
+  function checkAnswer(){
+    if(!active || answerEl.value === "") return;
+
+    attempts++;
+    attemptsEl.textContent = String(attempts);
+
+    if(Number(answerEl.value) === correct){
+      score++;
+      scoreEl.textContent = String(score);
+      feedbackEl.textContent = "Goed!";
+      feedbackEl.className = "feedback good";
+    } else {
+      feedbackEl.textContent = `Helaas, het was ${correct}.`;
+      feedbackEl.className = "feedback bad";
     }
+    newQuestion();
+  }
 
-    function startGame() {
-      if (gameActive) return;
-      gameActive = true;
-      score = 0;
-      attempts = 0;
-      scoreEl.textContent = score;
-      attemptsEl.textContent = attempts;
-      feedbackEl.textContent = "";
-      resultEl.textContent = "";
-      answerInput.disabled = false;
-      startBtn.disabled = true;
-
-      newQuestion();
-      startTimer();
-    }
-
-    function endGame() {
-      if (!gameActive) return;
-      gameActive = false;
-      clearInterval(timerId);
-      answerInput.disabled = true;
-      startBtn.disabled = false;
-
-      const percentage = Math.round((score / attempts) * 100) || 0;
-      resultEl.textContent =
-        `Je had ${score} goed van ${attempts} pogingen. (${percentage}%)`;
-    }
-
-    function checkAnswer(e) {
-      if (e.key !== "Enter" || !gameActive) return;
-
-      const value = parseInt(answerInput.value, 10);
-      if (isNaN(value)) return;
-
-      attempts++;
-      attemptsEl.textContent = attempts;
-
-      if (value === correctAnswer) {
-        score++;
-        scoreEl.textContent = score;
-        feedbackEl.textContent = "Goed zo!";
-        feedbackEl.className = "feedback correct";
-      } else {
-        feedbackEl.textContent = `Helaas, het was ${correctAnswer}.`;
-        feedbackEl.className = "feedback wrong";
-      }
-
-      newQuestion();
-    }
-
-    startBtn.addEventListener("click", startGame);
-    answerInput.addEventListener("keydown", checkAnswer);
-  </script>
+  startBtn.addEventListener("click", startGame);
+  answerEl.addEventListener("keydown", (e) => {
+    if(e.key === "Enter") checkAnswer();
+  });
+</script>
 </body>
 </html>
